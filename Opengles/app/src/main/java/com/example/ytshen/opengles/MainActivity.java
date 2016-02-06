@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             mSurfaceView.setEGLContextClientVersion(2);
-            mSurfaceView.setRenderer(new RendererWrapper());
+            mSurfaceView.setRenderer(new RendererWrapper(this));
             mRendererSet = true;
             setContentView(mSurfaceView);
         } else {

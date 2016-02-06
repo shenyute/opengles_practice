@@ -21,6 +21,11 @@ android {
         jniLibs.srcDir 'libs'
         jni.srcDirs = [] //disable automatic ndk-build call
     }
+    sourceSets {
+        main {
+            assets.srcDirs = ['src/main/assets', 'src/main/assets/textures', 'src/main/assets/shaders']
+        }
+    }
 }
 
 dependencies {
