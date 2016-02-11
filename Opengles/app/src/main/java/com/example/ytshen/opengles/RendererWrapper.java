@@ -35,7 +35,12 @@ public class RendererWrapper implements Renderer {
         on_draw_frame();
     }
 
+    public void handleTouchPress(float normalizedX, float normalizedY) {
+        on_touch_press(normalizedX, normalizedY);
+    }
+
     private static native void on_surface_created();
     private static native void on_surface_changed(int width, int height);
     private static native void on_draw_frame();
+    private static native void on_touch_press(float x, float y);
 }

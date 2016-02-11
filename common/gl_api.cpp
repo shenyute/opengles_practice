@@ -2,10 +2,15 @@
 #include "asset_utils.h"
 #include "buffer.h"
 #include "image.h"
-#include "platform_gl.h"
 #include "platform_asset_utils.h"
+#include "platform_gl.h"
+#include "platform_log.h"
+#include "macros.h"
 #include "shader.h"
 #include "texture.h"
+#include "emitter_object.h"
+
+#include <math.h>
  
 static GLuint texture;
 static GLuint buffer;
@@ -37,6 +42,7 @@ void on_surface_changed() {
 }
 
 void on_draw_frame() {
+/*
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
  
     glUseProgram(program);
@@ -55,5 +61,13 @@ void on_draw_frame() {
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
  
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+*/
 }
 
+float degreesToRadian(float degree) {
+  return degree / 180.0f * M_PI;
+}
+
+void on_touch_press(float x, float y) {
+  DEBUG_LOG_PRINT_D("gl_api", "%f,%f", x, y);
+}

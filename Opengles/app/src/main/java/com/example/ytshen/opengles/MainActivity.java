@@ -7,11 +7,14 @@ import android.opengl.GLSurfaceView;
 import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
     private GLSurfaceView mSurfaceView;
     private boolean mRendererSet;
+    private RendererWrapper mRenderer;
 
     private boolean isProbablyEmulator() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1
@@ -59,8 +62,31 @@ public class MainActivity extends AppCompatActivity {
             }
 
             mSurfaceView.setEGLContextClientVersion(2);
-            mSurfaceView.setRenderer(new RendererWrapper(this));
+            mRenderer = new RendererWrapper(this);
+            mSurfaceView.setRenderer(mRenderer);
             mRendererSet = true;
+            mSurfaceView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (event != null) {
+                        // Convert touch coordinates into normalized device
+                        // coordinates, keeping in mind that Android's Y
+                        // coordinates are inverted.
+                        final float normalizedX = (event.getX() / (float) v.getWidth()) * 2 - 1;
+                        final float normalizedY = -((event.getY() / (float) v.getHeight()) * 2 - 1);
+
+                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                            mSurfaceView.queueEvent(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mRenderer.handleTouchPress(normalizedX, normalizedY);
+                                }});
+                        }
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }});
             setContentView(mSurfaceView);
         } else {
             // Should never be seen in production, since the manifest filters

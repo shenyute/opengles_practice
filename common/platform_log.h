@@ -1,6 +1,10 @@
 #include "platform_macros.h"
 #include "config.h"
- 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 void _debug_log_v(const char* tag, const char* text, ...) PRINTF_ATTRIBUTE(2, 3);
 void _debug_log_d(const char* tag, const char* text, ...) PRINTF_ATTRIBUTE(2, 3);
 void _debug_log_w(const char* tag, const char* text, ...) PRINTF_ATTRIBUTE(2, 3);
@@ -17,3 +21,7 @@ void _debug_log_e(const char* tag, const char* text, ...) PRINTF_ATTRIBUTE(2, 3)
 #define DEBUG_LOG_WRITE_E(tag, text) DEBUG_LOG_PRINT_E(tag, "%s", text)
  
 #define CRASH(e) DEBUG_LOG_WRITE_E("Assert", #e); __builtin_trap()
+
+#ifdef __cplusplus
+}
+#endif
