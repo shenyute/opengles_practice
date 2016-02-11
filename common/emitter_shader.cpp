@@ -32,4 +32,5 @@ void EmitterShader::LoadShader(const char* vsh, const char* fsh)
   this->u_eColorStart = glGetUniformLocation(this->program, "u_eColorStart");
   this->u_eColorEnd = glGetUniformLocation(this->program, "u_eColorEnd");
   this->u_Texture = glGetUniformLocation(this->program, "u_Texture");
+  this->u_ePosition = glGetUniformLocation(this->program, "u_ePosition");
 }

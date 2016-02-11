@@ -17,6 +17,7 @@ uniform float       u_eVelocity;
 uniform float       u_eDecay;
 uniform float       u_eSizeStart;
 uniform float       u_eSizeEnd;
+uniform vec2        u_ePosition;
  
 // Varying
 varying vec3        v_pColorOffset;
@@ -60,7 +61,8 @@ void main(void)
   }
 
   // Required OpenGL ES 2.0 outputs
-  gl_Position = u_ProjectionMatrix * vec4(x, y, 0.0, 1.0);
+  vec2 position = vec2(x,y) + u_ePosition;
+  gl_Position = u_ProjectionMatrix * vec4(position, 0.0, 1.0);
 
   // 3
   gl_PointSize = max(0.0, (s + a_pSizeOffset));

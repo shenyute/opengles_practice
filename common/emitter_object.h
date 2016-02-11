@@ -36,6 +36,7 @@ typedef struct Emitter
     float       eSizeEnd;
     Vector3f    eColorStart;
     Vector3f    eColorEnd;
+    Vector2f    ePosition;
   Emitter()
     : eRadius(0.f)
     , eVelocity(0.f)
@@ -50,13 +51,13 @@ public:
   EmitterObject();
   ~EmitterObject();
   void RenderWithProjection(Matrix4f& matrix);
-  void UpdateLifeCycle(double timeEscape);
-  void Init(const char* fileName);
+  bool UpdateLifeCycle(double timeEscape);
+  void Init(const char* fileName, Vector2f& position);
 
 private:
   void LoadShader();
   void LoadTexture(const char* fileName);
-  void LoadParticleSystem();
+  void LoadParticleSystem(Vector2f& position);
 
 private:
   Vector2f m_gravity;

@@ -31,4 +31,5 @@ public:
   GLint     u_eColorStart;
   GLint     u_eColorEnd;
   GLint     u_Texture;
+  GLint     u_ePosition;
 };

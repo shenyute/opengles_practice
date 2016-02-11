@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <time.h>
 
-double s_lastTime = 0;
-
 EmitterObject::EmitterObject()
   : m_life(0.f)
   , m_time(0.f)
@@ -15,35 +13,11 @@ EmitterObject::EmitterObject()
 
 EmitterObject::~EmitterObject()
 {
-}
-
-/*
-static float now_s(void) {
-    struct timespec res;
-    clock_gettime(CLOCK_REALTIME, &res);
-    return res.tv_sec + (float) res.tv_nsec / 1e9;
-
-}
-*/
-
-double now_ms(void) {
-  struct timespec res;
-  clock_gettime(CLOCK_REALTIME, &res);
-  double ms = 1000.0 * res.tv_sec + (double) res.tv_nsec / 1e6;
-  return ms;
+  delete m_shader;
 }
 
 void EmitterObject::RenderWithProjection(Matrix4f& projectionMatrix)
 {
-  double now = now_ms();
-  //DEBUG_LOG_PRINT_D("EmitterObject::UpdateLifeCycle", "timeElapsed=%f now=%f",
-  //   (now - s_lastTime)/1000.0f, now);
-  if (s_lastTime == 0)
-    UpdateLifeCycle(0);
-  else
-    UpdateLifeCycle((now - s_lastTime) / 1000.0f);
-  s_lastTime = now;
-
   // Uniforms
   glUniformMatrix4fv(m_shader->u_ProjectionMatrix, 1, 0, projectionMatrix.data());
   glUniform2f(m_shader->u_Gravity, m_gravity[0], m_gravity[1]);
@@ -56,6 +30,7 @@ void EmitterObject::RenderWithProjection(Matrix4f& projectionMatrix)
   glUniform3f(m_shader->u_eColorStart, m_emitter.eColorStart[0], m_emitter.eColorStart[1], m_emitter.eColorStart[2]);
   glUniform3f(m_shader->u_eColorEnd, m_emitter.eColorEnd[0], m_emitter.eColorEnd[1], m_emitter.eColorEnd[2]);
   glUniform1i(m_shader->u_Texture, 0);
+  glUniform2f(m_shader->u_ePosition, m_emitter.ePosition[0], m_emitter.ePosition[1]);
 
   // Attributes
   glEnableVertexAttribArray(m_shader->a_pID);
@@ -82,18 +57,19 @@ void EmitterObject::RenderWithProjection(Matrix4f& projectionMatrix)
   glDisableVertexAttribArray(m_shader->a_pColorOffset);
 }
 
-void EmitterObject::UpdateLifeCycle(double timeElapsed)
+bool EmitterObject::UpdateLifeCycle(double timeElapsed)
 {
   m_time += timeElapsed;
-  if(m_time > m_life)
-      m_time = 0.0f;
+  if(m_time < m_life)
+      return true;
+  else return false;
 }
 
-void EmitterObject::Init(const char* fileName)
+void EmitterObject::Init(const char* fileName, Vector2f& position)
 {
   LoadShader();
   LoadTexture(fileName);
-  LoadParticleSystem();
+  LoadParticleSystem(position);
 }
 
 void EmitterObject::LoadShader()
@@ -118,7 +94,7 @@ void EmitterObject::LoadTexture(const char* fileName)
   glBindTexture(GL_TEXTURE_2D, texture);
 }
 
-void EmitterObject::LoadParticleSystem()
+void EmitterObject::LoadParticleSystem(Vector2f& position)
 {
   Emitter newEmitter;
 
@@ -154,6 +130,7 @@ void EmitterObject::LoadParticleSystem()
   newEmitter.eSizeEnd = 8.00f;                                    // Fragment end size
   newEmitter.eColorStart = Vector3f(1.00f, 0.50f, 0.00f);   // Fragment start color
   newEmitter.eColorEnd = Vector3f(0.25f, 0.00f, 0.00f);     // Fragment end color
+  newEmitter.ePosition = position;
 
   // Set global factors
   float growth = newEmitter.eRadius / newEmitter.eVelocity;       // Growth time
