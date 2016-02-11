@@ -15,6 +15,8 @@ LOCAL_SRC_FILES := platform_asset_utils.c \
                    $(CORE_RELATIVE_PATH)/image.c \
                    $(CORE_RELATIVE_PATH)/shader.c \
                    $(CORE_RELATIVE_PATH)/texture.c \
+                   $(CORE_RELATIVE_PATH)/emitter_shader.cpp \
+                   $(CORE_RELATIVE_PATH)/emitter_object.cpp \
 
 LOCAL_C_INCLUDES := $(PROJECT_ROOT_PATH)/common/
 LOCAL_C_INCLUDES += $(PROJECT_ROOT_PATH)/third_party/

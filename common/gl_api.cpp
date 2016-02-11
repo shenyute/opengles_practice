@@ -19,6 +19,7 @@ static GLuint program;
 static GLint a_position_location;
 static GLint a_texture_coordinates_location;
 static GLint u_texture_unit_location;
+static EmitterObject s_object;
  
 // position X, Y, texture S, T
 static const float rect[] = {-1.0f, -1.0f, 0.0f, 0.0f,
@@ -28,9 +29,11 @@ static const float rect[] = {-1.0f, -1.0f, 0.0f, 0.0f,
 
 void on_surface_created() {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+    s_object.Init();
 }
  
 void on_surface_changed() {
+/*
     texture = load_png_asset_into_texture("textures/air_hockey_surface.png");
     buffer = create_vbo(sizeof(rect), rect, GL_STATIC_DRAW);
     program = build_program_from_assets("shaders/shader.vsh", "shaders/shader.fsh");
@@ -39,11 +42,22 @@ void on_surface_changed() {
     a_texture_coordinates_location = 
         glGetAttribLocation(program, "a_TextureCoordinates");
     u_texture_unit_location = glGetUniformLocation(program, "u_TextureUnit");
+*/
 }
 
 void on_draw_frame() {
+    glClearColor(0.30f, 0.74f, 0.20f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT);
+
+    // Render Emitter
+    // Create Projection Matrix
+    float aspectRatio = 768.0f / 1022;
+    Affine3f m;
+    m = Scaling(1.0f, aspectRatio, 1.0f);
+    Matrix4f projectionMatrix = Matrix4f::Identity();
+    projectionMatrix = m.matrix();
+    s_object.RenderWithProjection(projectionMatrix);
 /*
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
  
     glUseProgram(program);
  
@@ -62,10 +76,6 @@ void on_draw_frame() {
  
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 */
-}
-
-float degreesToRadian(float degree) {
-  return degree / 180.0f * M_PI;
 }
 
 void on_touch_press(float x, float y) {
