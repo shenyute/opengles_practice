@@ -29,7 +29,7 @@ static const float rect[] = {-1.0f, -1.0f, 0.0f, 0.0f,
 
 void on_surface_created() {
     glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-    s_object.Init();
+    s_object.Init("textures/texture_64.png");
 }
  
 void on_surface_changed() {
@@ -48,6 +48,9 @@ void on_surface_changed() {
 void on_draw_frame() {
     glClearColor(0.30f, 0.74f, 0.20f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
+    // Set the blending function (normal w/ premultiplied alpha)
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     // Render Emitter
     // Create Projection Matrix

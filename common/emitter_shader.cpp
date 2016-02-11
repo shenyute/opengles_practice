@@ -27,6 +27,9 @@ void EmitterShader::LoadShader(const char* vsh, const char* fsh)
   this->u_eRadius = glGetUniformLocation(this->program, "u_eRadius");
   this->u_eVelocity = glGetUniformLocation(this->program, "u_eVelocity");
   this->u_eDecay = glGetUniformLocation(this->program, "u_eDecay");
-  this->u_eSize = glGetUniformLocation(this->program, "u_eSize");
-  this->u_eColor = glGetUniformLocation(this->program, "u_eColor");
+  this->u_eSizeStart = glGetUniformLocation(this->program, "u_eSizeStart");
+  this->u_eSizeEnd = glGetUniformLocation(this->program, "u_eSizeEnd");
+  this->u_eColorStart = glGetUniformLocation(this->program, "u_eColorStart");
+  this->u_eColorEnd = glGetUniformLocation(this->program, "u_eColorEnd");
+  this->u_Texture = glGetUniformLocation(this->program, "u_Texture");
 }

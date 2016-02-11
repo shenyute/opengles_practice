@@ -1,5 +1,6 @@
 #include "emitter_object.h"
 #include "platform_log.h"
+#include "asset_utils.h"
 #include <stdlib.h>
 #include <time.h>
 
@@ -50,9 +51,12 @@ void EmitterObject::RenderWithProjection(Matrix4f& projectionMatrix)
   glUniform1f(m_shader->u_eRadius, m_emitter.eRadius);
   glUniform1f(m_shader->u_eVelocity, m_emitter.eVelocity);
   glUniform1f(m_shader->u_eDecay, m_emitter.eDecay);
-  glUniform1f(m_shader->u_eSize, m_emitter.eSize);
-  glUniform3f(m_shader->u_eColor, m_emitter.eColor[0], m_emitter.eColor[1], m_emitter.eColor[2]);
-   
+  glUniform1f(m_shader->u_eSizeStart, m_emitter.eSizeStart);
+  glUniform1f(m_shader->u_eSizeEnd, m_emitter.eSizeEnd);
+  glUniform3f(m_shader->u_eColorStart, m_emitter.eColorStart[0], m_emitter.eColorStart[1], m_emitter.eColorStart[2]);
+  glUniform3f(m_shader->u_eColorEnd, m_emitter.eColorEnd[0], m_emitter.eColorEnd[1], m_emitter.eColorEnd[2]);
+  glUniform1i(m_shader->u_Texture, 0);
+
   // Attributes
   glEnableVertexAttribArray(m_shader->a_pID);
   glEnableVertexAttribArray(m_shader->a_pRadiusOffset);
@@ -60,7 +64,7 @@ void EmitterObject::RenderWithProjection(Matrix4f& projectionMatrix)
   glEnableVertexAttribArray(m_shader->a_pDecayOffset);
   glEnableVertexAttribArray(m_shader->a_pSizeOffset);
   glEnableVertexAttribArray(m_shader->a_pColorOffset);
-   
+
   glVertexAttribPointer(m_shader->a_pID, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)(offsetof(Particle, pID)));
   glVertexAttribPointer(m_shader->a_pRadiusOffset, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)(offsetof(Particle, pRadiusOffset)));
   glVertexAttribPointer(m_shader->a_pVelocityOffset, 1, GL_FLOAT, GL_FALSE, sizeof(Particle), (void*)(offsetof(Particle, pVelocityOffset)));
@@ -85,9 +89,10 @@ void EmitterObject::UpdateLifeCycle(double timeElapsed)
       m_time = 0.0f;
 }
 
-void EmitterObject::Init()
+void EmitterObject::Init(const char* fileName)
 {
   LoadShader();
+  LoadTexture(fileName);
   LoadParticleSystem();
 }
 
@@ -105,6 +110,12 @@ float randomFloatBetween(float min,float max)
 
 float degreesToRadian(float degree) {
   return degree / 180.0f * M_PI;
+}
+
+void EmitterObject::LoadTexture(const char* fileName)
+{
+  GLuint texture = load_png_asset_into_texture(fileName);
+  glBindTexture(GL_TEXTURE_2D, texture);
 }
 
 void EmitterObject::LoadParticleSystem()
@@ -139,8 +150,10 @@ void EmitterObject::LoadParticleSystem()
   newEmitter.eRadius = 0.75f;                                     // Blast radius
   newEmitter.eVelocity = 3.00f;                                   // Explosion velocity
   newEmitter.eDecay = 2.00f;                                      // Explosion decay
-  newEmitter.eSize = 32.00f;                                      // Fragment size
-  newEmitter.eColor = Vector3f(1.00f, 0.50f, 0.00f);        // Fragment color
+  newEmitter.eSizeStart = 32.00f;                                 // Fragment start size
+  newEmitter.eSizeEnd = 8.00f;                                    // Fragment end size
+  newEmitter.eColorStart = Vector3f(1.00f, 0.50f, 0.00f);   // Fragment start color
+  newEmitter.eColorEnd = Vector3f(0.25f, 0.00f, 0.00f);     // Fragment end color
 
   // Set global factors
   float growth = newEmitter.eRadius / newEmitter.eVelocity;       // Growth time
