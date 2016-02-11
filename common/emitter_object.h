@@ -65,4 +65,5 @@ private:
   double m_time;
   EmitterShader* m_shader;
   Emitter m_emitter;
+  GLuint m_particleBuffer;
 };

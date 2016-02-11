@@ -18,6 +18,9 @@ EmitterObject::~EmitterObject()
 
 void EmitterObject::RenderWithProjection(Matrix4f& projectionMatrix)
 {
+  // Switch Buffers
+  glBindBuffer(GL_ARRAY_BUFFER, m_particleBuffer);
+
   // Uniforms
   glUniformMatrix4fv(m_shader->u_ProjectionMatrix, 1, 0, projectionMatrix.data());
   glUniform2f(m_shader->u_Gravity, m_gravity[0], m_gravity[1]);
@@ -67,6 +70,7 @@ bool EmitterObject::UpdateLifeCycle(double timeElapsed)
 
 void EmitterObject::Init(const char* fileName, Vector2f& position)
 {
+  m_particleBuffer = 0;
   LoadShader();
   LoadTexture(fileName);
   LoadParticleSystem(position);
@@ -141,8 +145,7 @@ void EmitterObject::LoadParticleSystem(Vector2f& position)
 
   // Set Emitter & VBO
   m_emitter = newEmitter;
-  GLuint particleBuffer = 0;
-  glGenBuffers(1, &particleBuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, particleBuffer);
+  glGenBuffers(1, &m_particleBuffer);
+  glBindBuffer(GL_ARRAY_BUFFER, m_particleBuffer);
   glBufferData(GL_ARRAY_BUFFER, sizeof(m_emitter.eParticles), m_emitter.eParticles, GL_STATIC_DRAW);
 }
