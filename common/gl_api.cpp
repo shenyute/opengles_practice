@@ -68,7 +68,7 @@ void update_life_cycle() {
 }
 
 void on_draw_frame() {
-    glClearColor(0.30f, 0.74f, 0.20f, 1.0f);
+    //glClearColor(0.30f, 0.74f, 0.20f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
     // Set the blending function (normal w/ premultiplied alpha)
     glEnable(GL_BLEND);

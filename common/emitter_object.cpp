@@ -132,7 +132,11 @@ void EmitterObject::LoadParticleSystem(Vector2f& position)
   newEmitter.eDecay = 2.00f;                                      // Explosion decay
   newEmitter.eSizeStart = 32.00f;                                 // Fragment start size
   newEmitter.eSizeEnd = 8.00f;                                    // Fragment end size
-  newEmitter.eColorStart = Vector3f(1.00f, 0.50f, 0.00f);   // Fragment start color
+  float colorR = ((float) (random() % ((unsigned)RAND_MAX)) / RAND_MAX);
+  float colorG = ((float) (random() % ((unsigned)RAND_MAX)) / RAND_MAX);
+  float colorB = ((float) (random() % ((unsigned)RAND_MAX)) / RAND_MAX);
+  //newEmitter.eColorStart = Vector3f(1.00f, 0.50f, 0.00f);   // Fragment start color
+  newEmitter.eColorStart = Vector3f(colorR, colorG, colorB);
   newEmitter.eColorEnd = Vector3f(0.25f, 0.00f, 0.00f);     // Fragment end color
   newEmitter.ePosition = position;
 
