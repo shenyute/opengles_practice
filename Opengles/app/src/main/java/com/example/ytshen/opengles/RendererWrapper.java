@@ -39,8 +39,13 @@ public class RendererWrapper implements Renderer {
         on_touch_press(normalizedX, normalizedY);
     }
 
+    public void handleLongPress(float normalizedX, float normalizedY) {
+        on_long_press(normalizedX, normalizedY);
+    }
+
     private static native void on_surface_created();
     private static native void on_surface_changed(int width, int height);
     private static native void on_draw_frame();
     private static native void on_touch_press(float x, float y);
+    private static native void on_long_press(float x, float y);
 }

@@ -53,7 +53,7 @@ void update_life_cycle() {
   if (s_emitters.size() > 0) {
     if (s_lastTime != 0)
       timeElapsed = ((now - s_lastTime) / 1000.0f);
-    DEBUG_LOG_PRINT_D("gl_api", "update_life_cycle timeElapsed=%f", timeElapsed);
+    //DEBUG_LOG_PRINT_D("gl_api", "update_life_cycle timeElapsed=%f", timeElapsed);
     std::vector<EmitterObject*>::iterator it = s_emitters.begin();
     for (; it != s_emitters.end();) {
       bool alive = (*it)->UpdateLifeCycle(timeElapsed);
@@ -115,4 +115,8 @@ void on_touch_press(float x, float y) {
   Vector2f position(x, y);
   emitter->Init("textures/texture_64.png", position);
   s_emitters.push_back(emitter);
+}
+
+void on_long_press(float x, float y) {
+  DEBUG_LOG_PRINT_D("gl_api", "on_long_press %f,%f count=%d", x, y, s_emitters.size());
 }

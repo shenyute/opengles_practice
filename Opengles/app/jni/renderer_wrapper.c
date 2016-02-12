@@ -37,6 +37,13 @@ JNIEXPORT void JNICALL Java_com_example_ytshen_opengles_RendererWrapper_on_1touc
     on_touch_press(normalized_x, normalized_y);
 }
 
+JNIEXPORT void JNICALL Java_com_example_ytshen_opengles_RendererWrapper_on_1long_1press(
+    JNIEnv* env, jclass cls, jfloat normalized_x, jfloat normalized_y) {
+    UNUSED(env);
+    UNUSED(cls);
+    on_long_press(normalized_x, normalized_y);
+}
+
 #ifdef __cplusplus
 }
 #endif

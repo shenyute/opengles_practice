@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
     private GLSurfaceView mSurfaceView;
     private boolean mRendererSet;
     private RendererWrapper mRenderer;
+    private long mTouchStartTime;
+    private boolean mHandleLongPress;
 
     private boolean isProbablyEmulator() {
         return Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH_MR1
@@ -76,11 +78,26 @@ public class MainActivity extends AppCompatActivity {
                         final float normalizedY = -((event.getY() / (float) v.getHeight()) * 2 - 1);
 
                         if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                            mTouchStartTime = System.currentTimeMillis();
+                            mHandleLongPress = false;
                             mSurfaceView.queueEvent(new Runnable() {
                                 @Override
                                 public void run() {
                                     mRenderer.handleTouchPress(normalizedX, normalizedY);
-                                }});
+                                }
+                            });
+                        } else {
+                            long now = System.currentTimeMillis();
+                            // it is long press
+                            if (now - mTouchStartTime > 1000 && !mHandleLongPress) {
+                                mHandleLongPress = true;
+                                mSurfaceView.queueEvent(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mRenderer.handleLongPress(normalizedX, normalizedY);
+                                    }
+                                });
+                            }
                         }
                         return true;
                     } else {
